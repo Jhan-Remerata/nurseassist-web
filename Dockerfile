@@ -3,7 +3,7 @@ FROM php:8.2-fpm
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git curl zip unzip sqlite3 libsqlite3-dev libpng-dev libjpeg-dev libfreetype6-dev \
-    libonig-dev libxml2-dev libzip-dev && \
+    libonig-dev libxml2-dev libzip-dev nodejs npm && \
     docker-php-ext-install pdo pdo_sqlite mbstring zip exif pcntl bcmath gd
 
 # Install Composer
@@ -17,6 +17,9 @@ COPY . .
 
 # Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev
+
+# Install JS dependencies and build frontend
+RUN npm install && npm run build
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www
